@@ -40,7 +40,6 @@ def load_data():
     return data
 
 df = load_data()
-st.write(df.columns)
 tickers = [c for c in df.columns if c != "date"]
 
 chosen = st.sidebar.multiselect(
