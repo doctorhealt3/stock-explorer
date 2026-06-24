@@ -1,10 +1,11 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import yfinance as yf
 
 st.set_page_config(page_title="Stock Explorer", layout="wide")
+
 st.title("📈 Stock Price Explorer")
+
 st.caption(
     "Prices are indexed to 1.00 at the start, so each line shows growth since Jan 2018."
 )
@@ -13,43 +14,25 @@ st.info(
     "Did you know? Microsoft was founded in 1975 by Bill Gates and Paul Allen."
 )
 
+
 @st.cache_data
 def load_data():
+    df = px.data.stocks()
+    df["date"] = pd.to_datetime(df["date"])
+    return df
 
-    tickers = [
-        "AAPL",
-        "MSFT",
-        "GOOG",
-        "AMZN",
-        "NVDA",
-        "TSLA",
-        "ABBN.SW",
-        "AMD"
-    ]
-
-    data = yf.download(
-        tickers,
-        start="2018-01-01",
-        auto_adjust=True
-    )["Close"]
-
-    data = data / data.iloc[0]
-    data.reset_index(inplace=True)
-    data.rename(columns={"Date": "date"}, inplace=True)
-
-    return data
 
 df = load_data()
+
 display_names = {
     "AAPL": "Apple",
     "MSFT": "Microsoft",
     "GOOG": "Google",
     "AMZN": "Amazon",
-    "NVDA": "NVIDIA",
-    "TSLA": "Tesla",
-    "ABBN.SW": "ABB",
-    "AMD": "AMD"
+    "FB": "Meta",
+    "NFLX": "Netflix"
 }
+
 tickers = [c for c in df.columns if c != "date"]
 
 chosen = st.sidebar.multiselect(
@@ -72,7 +55,11 @@ if not chosen:
     st.warning("Pick at least one stock from the sidebar.")
     st.stop()
 
-growths = {t: (df[t].iloc[-1] - 1) * 100 for t in chosen}
+growths = {
+    t: (df[t].iloc[-1] - 1) * 100
+    for t in chosen
+}
+
 best_stock = max(growths, key=growths.get)
 
 st.success(
@@ -92,6 +79,7 @@ for col, t in zip(investment_cols, chosen):
     )
 
 cols = st.columns(len(chosen))
+
 for col, t in zip(cols, chosen):
     growth = (df[t].iloc[-1] - 1) * 100
 
@@ -105,14 +93,14 @@ fig = px.line(
     df,
     x="date",
     y=chosen,
-    title="Normalized price over time"
+    title="Normalized Price Over Time"
 )
 
 st.plotly_chart(fig, width="stretch")
 
 growth_df = pd.DataFrame(
     {
-        "Stock": chosen,
+        "Stock": [display_names.get(t, t) for t in chosen],
         "Growth (%)": [growths[t] for t in chosen]
     }
 )
