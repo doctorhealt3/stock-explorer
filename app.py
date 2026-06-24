@@ -4,6 +4,13 @@ import streamlit as st
 
 st.set_page_config(page_title="Stock Explorer", layout="wide")
 st.title("📈 Stock Price Explorer")
+st.caption(
+    "Prices are indexed to 1.00 at the start, so each line shows growth since Jan 2018."
+)
+
+st.info(
+    "Did you know? Microsoft was founded in 1975 by Bill Gates and Paul Allen."
+)
 
 @st.cache_data
 def load_data():
