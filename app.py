@@ -87,18 +87,19 @@ for col, t in zip(investment_cols, chosen):
     final_value = investment * df[t].iloc[-1]
 
     col.metric(
-    display_names.get(t, t),
-    f"€{final_value:,.0f}"
-)
+        display_names.get(t, t),
+        f"€{final_value:,.0f}"
+    )
 
 cols = st.columns(len(chosen))
 for col, t in zip(cols, chosen):
     growth = (df[t].iloc[-1] - 1) * 100
-   col.metric(
-    display_names.get(t, t),
-    f"{df[t].iloc[-1]:.2f}x",
-    f"{growth:+.1f}%"
-)
+
+    col.metric(
+        display_names.get(t, t),
+        f"{df[t].iloc[-1]:.2f}x",
+        f"{growth:+.1f}%"
+    )
 
 fig = px.line(
     df,
