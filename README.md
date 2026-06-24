@@ -1,9 +1,10 @@
 # Stock Explorer
 
-Live App:
-https://stock-explorer-6m66ju7qrohm46bgptc8be.streamlit.app/
+Stock Explorer is a Streamlit web application for comparing major technology stocks with interactive Plotly charts, growth metrics, and investment outcome estimates.
 
-A simple Streamlit web application for comparing the performance of major technology stocks.
+## Deployment Link
+
+Live app: https://stock-explorer-6m66ju7qrohm46bgptc8be.streamlit.app/
 
 ## Features
 
@@ -18,7 +19,7 @@ A simple Streamlit web application for comparing the performance of major techno
 
 ```mermaid
 flowchart LR
-    A[Plotly Built-in Stock Dataset]
+    A[Plotly/YFinance Stock Data]
     B[Streamlit App]
     C[GitHub Repository]
     D[Streamlit Cloud]
@@ -38,7 +39,3 @@ flowchart LR
 * Pandas
 * GitHub
 * Streamlit Cloud
-
-## Live Application
-
-https://stock-explorer-6m66ju7qrohm46bgptc8be.streamlit.app/
