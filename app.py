@@ -31,10 +31,6 @@ if not chosen:
     st.warning("Pick at least one stock from the sidebar.")
     st.stop()
 
-st.caption(
-    "Prices are indexed to 1.00 at the start, so each line shows growth since Jan 2018."
-)
-
 growths = {t: (df[t].iloc[-1] - 1) * 100 for t in chosen}
 best_stock = max(growths, key=growths.get)
 
@@ -54,4 +50,4 @@ fig = px.line(
     title="Normalized price over time"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width="stretch")
