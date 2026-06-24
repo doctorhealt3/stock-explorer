@@ -17,14 +17,14 @@ st.info(
 def load_data():
 
     tickers = [
-        "AAPL",  # Apple
-        "MSFT",  # Microsoft
-        "GOOG",  # Google
-        "AMZN",  # Amazon
-        "NVDA",  # Nvidia
-        "TSLA",  # Tesla
-        "ABB",   # ABB
-        "AMD"    # AMD
+        "AAPL",
+        "MSFT",
+        "GOOG",
+        "AMZN",
+        "NVDA",
+        "TSLA",
+        "ABBN.SW",
+        "AMD"
     ]
 
     data = yf.download(
@@ -40,12 +40,23 @@ def load_data():
     return data
 
 df = load_data()
+display_names = {
+    "AAPL": "Apple",
+    "MSFT": "Microsoft",
+    "GOOG": "Google",
+    "AMZN": "Amazon",
+    "NVDA": "NVIDIA",
+    "TSLA": "Tesla",
+    "ABBN.SW": "ABB",
+    "AMD": "AMD"
+}
 tickers = [c for c in df.columns if c != "date"]
 
 chosen = st.sidebar.multiselect(
     "Choose stocks",
     tickers,
-    default=["AAPL", "MSFT", "GOOG"]
+    default=["AAPL", "MSFT", "GOOG"],
+    format_func=lambda x: display_names.get(x, x)
 )
 
 st.sidebar.header("Stock Selection")
@@ -65,7 +76,7 @@ growths = {t: (df[t].iloc[-1] - 1) * 100 for t in chosen}
 best_stock = max(growths, key=growths.get)
 
 st.success(
-    f"🏆 Best Performer: {best_stock} ({growths[best_stock]:.1f}% growth)"
+    f"🏆 Best Performer: {display_names.get(best_stock, best_stock)} ({growths[best_stock]:.1f}% growth)"
 )
 
 st.subheader("💰 Investment Outcome")
@@ -76,14 +87,18 @@ for col, t in zip(investment_cols, chosen):
     final_value = investment * df[t].iloc[-1]
 
     col.metric(
-        t,
-        f"€{final_value:,.0f}"
-    )
+    display_names.get(t, t),
+    f"€{final_value:,.0f}"
+)
 
 cols = st.columns(len(chosen))
 for col, t in zip(cols, chosen):
     growth = (df[t].iloc[-1] - 1) * 100
-    col.metric(t, f"{df[t].iloc[-1]:.2f}x", f"{growth:+.1f}%")
+   col.metric(
+    display_names.get(t, t),
+    f"{df[t].iloc[-1]:.2f}x",
+    f"{growth:+.1f}%"
+)
 
 fig = px.line(
     df,
